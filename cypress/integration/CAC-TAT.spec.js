@@ -11,22 +11,12 @@ describe('Central de Atendimento ao Cliente TAT', function() {
   })
 
   it('preenche e envia o formulario', function() {
-    cy.get('#firstName').type('Enrico')
-    cy.get('#lastName').type('Cruz')
-    cy.get('#email').type('enrico@email.com')
-    cy.get('#open-text-area').type('lorem ipsum')
-    cy.get('button[type="submit"]').click()
-
+    cy.fillMandatoryFieldsAndSubmit('Enrico', 'Cruz', 'enrico@email.com', '12345678', 'Mentoria', 'lorem ipsum')
     cy.get('.success').should('be.visible')
   })
 
   it('verifica msg de erro ao digitar um email invalido', function() {
-    cy.get('#firstName').type('Enrico')
-    cy.get('#lastName').type('Cruz')
-    cy.get('#email').type('enrico.email.com')
-    cy.get('#open-text-area').type('lorem ipsum')
-    cy.get('button[type="submit"]').click()
-
+    cy.fillMandatoryFieldsAndSubmit('Enrico', 'Cruz', 'enrico.email.com', '12345678', 'Blog', 'lorem ipsum')
     cy.get('.error').should('be.visible')
   })
 
@@ -37,13 +27,8 @@ describe('Central de Atendimento ao Cliente TAT', function() {
   })
 
   it('verifica msg de erro ao marcar checkbox de telefone e nao digitar um telefone', function() {
-    cy.get('#firstName').type('Enrico')
-    cy.get('#lastName').type('Cruz')
-    cy.get('#email').type('enrico@email.com')
     cy.get('#phone-checkbox').click()
-    cy.get('#open-text-area').type('lorem ipsum')
-    cy.get('button[type="submit"]').click()
-
+    cy.fillMandatoryFieldsAndSubmit('Enrico', 'Cruz', 'enrico@email.com', '', '', 'lorem ipsum')
     cy.get('.error').should('be.visible')
   })
 
@@ -73,6 +58,10 @@ describe('Central de Atendimento ao Cliente TAT', function() {
       .should('have.value', 'lorem ipsum')
       .clear()
       .should('have.value', '')
-
   })
+  it('verifica msg erro ao clicar em submit sem preencher campos', function() {
+    cy.get('button[type="submit"]').click()
+    cy.get('.error').should('be.visible')
+  })
+
 })
